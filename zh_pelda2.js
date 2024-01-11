@@ -203,41 +203,13 @@ db.termek3.aggregate([
 
 //8 Mely szervizelő párok szervizelik ugyanazokat a gépeket, s melyek azok a gépek? (csaladnev1,csaladnev2,modell)
 db.termek3.aggregate([
-    {
-        $unwind: "$szervizelok"
-    },
-    {
-        $group: {
-            _id: "$szervizelok",
-            gepek: {
-                $addToSet: {
-                    gyarto: "$gyarto",
-                    modell: "$_id"
-                }
-            }
-        }
-    },
-    {
-        $unwind: "$gepek"
-    },
-    {
-        $group: {
-            _id: "$_id",
-            szervizeloParr: {
-                $addToSet: "$gepek.gyarto"
-            },
-            gepek: {
-                $addToSet: "$gepek.modell"
-            },
-            count: { $sum: 1 }
-        }
-    },
-    {
-        $match: {
-            count: { $gt: 1 }
-        }
-    }
-
+	{
+		$project:{szervizelok:1,_id:1}
+	},
+	{
+		$match:{"szervizelok.1":{$exists:true}}
+	}
+]);
 
 
 
